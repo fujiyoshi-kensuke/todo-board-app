@@ -1,0 +1,26 @@
+{
+  "name": "intern-hw-saas-sw-dib-fujiyoshi-kensuke",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AKARI-intern/intern-hw-saas-sw-dib-fujiyoshi-kensuke.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/AKARI-intern/intern-hw-saas-sw-dib-fujiyoshi-kensuke/issues"
+  },
+  "homepage": "https://github.com/AKARI-intern/intern-hw-saas-sw-dib-fujiyoshi-kensuke#readme",
+  "private": true,
+  "workspaces": [
+    "backend",
+    "frontend"
+  ]
+}
