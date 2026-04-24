@@ -19,11 +19,11 @@ export class TodoController {
 
     @Patch(':id')
     updateTodo(@Param('id') id: string, @Body() body: UpdateTodoDto) {
-        return this.todoService.updateTodo(id, body);
+        return this.todoService.updateTodo(Number(id), body);
     }
 
     @Delete(':id')
     deleteTodo(@Param('id') id: string) {
-        return this.todoService.deleteTodo(id);
+        return this.todoService.deleteTodo(Number(id));
     }
 }

@@ -16,23 +16,30 @@ export class TodoService {
         return await this.prismaService.todo.create({
             data: {
                 title: body.title,
-            }
-        })
+            },
+        });
     }
 
-    async updateTodo(id: string, body: UpdateTodoDto) {
+    async updateTodo(id: number, body: UpdateTodoDto) {
+        const data: UpdateTodoDto = {};
+
+        if (body.title !== undefined) {
+            data.title = body.title;
+        }
+
+        if (body.completed !== undefined) {
+            data.completed = body.completed;
+        }
+
         try {
             return await this.prismaService.todo.update({
-                where: {
-                    id: Number(id),
-                },
-                data: {
-                    completed: body.completed,
-                }
-            })
+                where: { id },
+                data,
+            });
         } catch (error) {
-            if(
-                error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2025'
+            if (
+                error instanceof Prisma.PrismaClientKnownRequestError &&
+                error.code === 'P2025'
             ) {
                 throw new NotFoundException(`Todo with id ${id} not found`);
             }
@@ -40,17 +47,15 @@ export class TodoService {
         }
     }
 
-    async deleteTodo(id: string) {
+    async deleteTodo(id: number) {
         try {
             return await this.prismaService.todo.delete({
-
-            where: {
-                id: Number(id)
-            }
-        })
+                where: { id },
+            });
         } catch (error) {
-            if(
-                error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2025'
+            if (
+                error instanceof Prisma.PrismaClientKnownRequestError &&
+                error.code === 'P2025'
             ) {
                 throw new NotFoundException(`Todo with id ${id} not found`);
             }
