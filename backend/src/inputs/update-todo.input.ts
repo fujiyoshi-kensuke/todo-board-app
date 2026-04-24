@@ -1,13 +1,19 @@
-import { InputType, Field, Int } from "@nestjs/graphql";
+import { InputType, Field, Int } from '@nestjs/graphql';
+import { IsInt, IsOptional, IsString, IsBoolean } from 'class-validator';
 
 @InputType()
 export class UpdateTodoInput {
-    @Field(() => Int)
-    id!: number;
+  @Field(() => Int)
+  @IsInt()
+  id!: number;
 
-    @Field({ nullable: true })
-    title?: string;
+  @Field({ nullable: true })
+  @IsOptional()
+  @IsString()
+  title?: string;
 
-    @Field({ nullable: true })
-    completed?: boolean;
+  @Field({ nullable: true })
+  @IsOptional()
+  @IsBoolean()
+  completed?: boolean;
 }
