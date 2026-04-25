@@ -1,121 +1,162 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+import { gql } from '@apollo/client';
+import { useQuery, useMutation } from '@apollo/client/react';
+import { useState } from 'react';
+
+const GET_TODOS = gql`
+  query GetTodos {
+    todos {
+      id
+      title
+      completed
+    }
+  }`;
+
+const CREATE_TODO = gql`
+  mutation CreateTodo($input: CreateTodoInput!) {
+    createTodo(input: $input) {
+      id
+      title
+      completed
+    }
+  }
+`;
+
+const UPDATE_TODO = gql`
+  mutation UpdateTodo($input: UpdateTodoInput!) {
+    updateTodo(input: $input) {
+      id
+      title
+      completed
+    }
+  }
+`;
+
+const DELETE_TODO = gql`
+  mutation DeleteTodo($id: Int!) {
+    deleteTodo(id: $id){
+      id
+      title
+      completed
+    }
+  }
+`;
+
+type Todo = {
+  id: number;
+  title: string;
+  completed: boolean;
+};
+
+type GetTodosData = {
+  todos: Todo[];
+};
+
+type CreateTodoData = {
+  createTodo: Todo;
+};
+
+type CreateTodoVariables = {
+  input: {
+    title: string;
+  };
+};
+
+type UpdateTodoData = {
+  updateTodo: Todo;
+};
+
+type UpdateTodoVariables = {
+  input: {
+    id: number;
+    title?: string;
+    completed?: boolean;
+  }
+}
+
+type DeleteTodoData = {
+  deleteTodo: Todo;
+}
+
+type DeleteTodoVariables = {
+  id: number;
+}
 
 function App() {
-  const [count, setCount] = useState(0)
+  const { loading, error, data } = useQuery<GetTodosData>(GET_TODOS);
 
-  return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.tsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+  const [title, setTitle] = useState('');
+  const [createTodo] = useMutation<CreateTodoData, CreateTodoVariables>(CREATE_TODO, {
+    refetchQueries: [{ query: GET_TODOS }],
+  });
+  const [updateTodo] = useMutation<UpdateTodoData, UpdateTodoVariables>(UPDATE_TODO, {
+    refetchQueries: [{ query: GET_TODOS }],
+  });
+  const [deleteTodo] = useMutation<DeleteTodoData, DeleteTodoVariables>(DELETE_TODO, {
+    refetchQueries: [{ query: GET_TODOS }],
+  });
 
-      <div className="ticks"></div>
+  const handleCreateTodo = async () => {
+    if (!title.trim()) return;
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
+    await createTodo({
+      variables: {
+        input: { title },
+      },
+    });
+    setTitle('');
+  };
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
+  const handleUpdateTodo = async (todo: Todo) => {
+    await updateTodo({
+      variables: {
+        input: {
+          id: todo.id,
+          completed: !todo.completed,
+        }
+      }
+    });
+  };
+
+  const handleDeleteTodo = async (id: number) => {
+    await deleteTodo({
+      variables: { id },
+    });
+  }
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error.message}</p>;
+
+  return(
+    <div>
+      <h1>Todo List</h1>
+      <div>
+        <input
+          type="text"
+          value={title}
+          onChange={(event) => setTitle(event.target.value)}
+          placeholder="New todo title"
+        />
+        <button onClick={handleCreateTodo}>Add Todo</button>
+      </div>
+      <ul>
+        {data?.todos.map((todo) => (
+          <li key={todo.id}>
+            {todo.title} - {todo.completed ? 'Done' : 'Not done'}
+            <button
+              onClick={() => handleUpdateTodo(todo)}
+            >
+              Toggle Completed
+            </button>
+            <button
+              onClick={() => handleDeleteTodo(todo.id)}
+            >
+              Delete
+            </button>
+          </li>
+        ))}
+      </ul>
+    </div>
   )
 }
 
-export default App
+export default App;

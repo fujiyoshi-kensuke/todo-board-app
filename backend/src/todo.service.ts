@@ -9,7 +9,9 @@ export class TodoService {
     constructor(private readonly prismaService: PrismaService) {}
 
     async getTodos() {
-        return this.prismaService.todo.findMany();
+        return this.prismaService.todo.findMany({
+            orderBy: { id: 'asc' },
+        });
     }
 
     async createTodo(body: CreateTodoDto) {
