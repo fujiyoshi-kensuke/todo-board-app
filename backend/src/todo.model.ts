@@ -11,6 +11,9 @@ export class Todo {
     @Field()
     completed!: boolean;
 
+    @Field(() => Date, {nullable: true})
+    dueDate?:Date | null;
+
     @Field()
     createdAt!: Date;
 
