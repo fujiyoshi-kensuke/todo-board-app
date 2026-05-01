@@ -18,12 +18,13 @@ export class TodoService {
         return await this.prismaService.todo.create({
             data: {
                 title: body.title,
+                dueDate: body.dueDate ? new Date(body.dueDate) : undefined,
             },
         });
     }
 
     async updateTodo(id: number, body: UpdateTodoDto) {
-        const data: UpdateTodoDto = {};
+        const data: Prisma.TodoUpdateInput = {};
 
         if (body.title !== undefined) {
             data.title = body.title;
@@ -31,6 +32,10 @@ export class TodoService {
 
         if (body.completed !== undefined) {
             data.completed = body.completed;
+        }
+
+        if (body.dueDate !== undefined) {
+            data.dueDate = new Date(body.dueDate);
         }
 
         try {
