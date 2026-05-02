@@ -109,6 +109,9 @@ function App() {
   const [status, setStatus] = useState('TODO');
   const [editingDueDates, setEditingDueDates] = useState<Record<number, string>>({});
 
+  const [isCreateFormOpen, setIsCreateFormOpen] = useState(false);
+  const [searchText, setSearchText] = useState('');
+
   const handleCreateTodo = async () => {
     const isoDueDate = dueDate ? new Date(dueDate).toISOString() : undefined;
     if (!title.trim()) return;
@@ -162,13 +165,38 @@ function App() {
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
 
-  const todoItems = data?.todos.filter((todo) => todo.status === 'TODO') ?? [];
-  const doingItems = data?.todos.filter((todo) => todo.status === 'DOING') ?? [];
-  const doneItems = data?.todos.filter((todo) => todo.status === 'DONE') ?? [];
+  const filteredTodos =
+  data?.todos.filter((todo) =>
+    todo.title.toLowerCase().includes(searchText.toLowerCase())
+  ) ?? [];
+  const todoItems = filteredTodos.filter((todo) => todo.status === 'TODO');
+  const doingItems = filteredTodos.filter((todo) => todo.status === 'DOING');
+  const doneItems = filteredTodos.filter((todo) => todo.status === 'DONE');
 
   return(
     <div className="app">
+      <div className="page-header">
       <h1>Todo List</h1>
+
+      <div className="header-actions">
+        <button
+          className="new-task-button"
+          onClick={() => setIsCreateFormOpen((prev) => !prev)}
+        >
+          + New Task
+        </button>
+
+        <input
+          className="search-input"
+          type="text"
+          value={searchText}
+          onChange={(event) => setSearchText(event.target.value)}
+          placeholder="Search tasks..."
+        />
+      </div>
+    </div>
+
+    {isCreateFormOpen && (
       <div className="create-form">
         <input
           type="text"
@@ -191,6 +219,7 @@ function App() {
         </select>
         <button onClick={handleCreateTodo}>Add Todo</button>
       </div>
+    )}
 
       <div className="board">
         <TaskColumn
