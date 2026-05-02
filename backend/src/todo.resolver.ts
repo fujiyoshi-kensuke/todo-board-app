@@ -28,8 +28,8 @@ export class TodoResolver {
     ): Promise<Todo> {
     return this.todoService.updateTodo(input.id, {
         title: input.title,
-        completed: input.completed,
         dueDate: input.dueDate,
+        status: input.status,
     });
     }
 

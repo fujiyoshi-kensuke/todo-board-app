@@ -1,5 +1,5 @@
 import { InputType, Field } from '@nestjs/graphql';
-import { IsString, IsNotEmpty, IsOptional, IsDateString } from 'class-validator';
+import { IsString, IsNotEmpty, IsOptional, IsDateString, IsIn } from 'class-validator';
 
 @InputType()
 export class CreateTodoInput {
@@ -12,4 +12,9 @@ export class CreateTodoInput {
   @IsOptional()
   @IsDateString()
   dueDate?: string;
+
+  @Field({ nullable: true })
+  @IsOptional()
+  @IsIn(['TODO', 'DOING', 'DONE'])
+  status?: string;
 }

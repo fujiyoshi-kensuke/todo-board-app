@@ -19,6 +19,7 @@ export class TodoService {
             data: {
                 title: body.title,
                 dueDate: body.dueDate ? new Date(body.dueDate) : undefined,
+                status: body.status as Prisma.TodoCreateInput['status'],
             },
         });
     }
@@ -30,12 +31,12 @@ export class TodoService {
             data.title = body.title;
         }
 
-        if (body.completed !== undefined) {
-            data.completed = body.completed;
-        }
-
         if (body.dueDate !== undefined) {
             data.dueDate = new Date(body.dueDate);
+        }
+
+        if (body.status !== undefined) {
+            data.status = body.status as Prisma.TodoUpdateInput['status'];
         }
 
         try {

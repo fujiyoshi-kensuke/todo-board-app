@@ -9,10 +9,10 @@ export class Todo {
     title!: string;
 
     @Field()
-    completed!: boolean;
+    status!: string;
 
     @Field(() => Date, {nullable: true})
-    dueDate?:Date | null;
+    dueDate!:Date | null;
 
     @Field()
     createdAt!: Date;
