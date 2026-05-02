@@ -1,6 +1,7 @@
 import { gql } from '@apollo/client';
 import { useQuery, useMutation } from '@apollo/client/react';
 import { useState } from 'react';
+import { TaskColumn } from './components/TaskColumn';
 import './App.css';
 
 const GET_TODOS = gql`
@@ -192,185 +193,36 @@ function App() {
       </div>
 
       <div className="board">
-        <div className="column">
-          <h2>TODO</h2>
-          <ul className="task-list">
-            {todoItems.map((todo) => (
-              <li key={todo.id} className="task-card">
-                <div className="task-header">
-                  <span className="task-title">{todo.title}</span>
-                  <span className="task-status">{todo.status}</span>
-                </div>
-                <div className="task-due">
-                  {todo.dueDate ? `Due: ${formatDueDate(todo.dueDate)}` : 'No due date'}
-                </div>
-                <div className="task-due-editor">
-                  <input
-                    type="datetime-local"
-                    value={editingDueDates[todo.id] ?? formatForDateTimeLocal(todo.dueDate)}
-                    onChange={(event) =>
-                      setEditingDueDates({
-                        ...editingDueDates,
-                        [todo.id]: event.target.value,
-                      })
-                    }
-                  />
-                  <button
-                    onClick={() => {
-                      const localValue = editingDueDates[todo.id];
-                      const isoDueDate = localValue ? new Date(localValue).toISOString() : undefined;
-
-                      handleUpdateTodo({
-                        id: todo.id,
-                        dueDate: isoDueDate,
-                      });
-                    }}
-                  >
-                    Update Due Date
-                  </button>
-                </div>
-                <div className="task-actions">
-                  <select
-                    value={todo.status}
-                    onChange={(event) =>
-                      handleUpdateTodo({
-                        id: todo.id,
-                        status: event.target.value,
-                      })
-                    }
-                  >
-                    <option value="TODO">TODO</option>
-                    <option value="DOING">DOING</option>
-                    <option value="DONE">DONE</option>
-                  </select>
-                  <button onClick={() => handleDeleteTodo(todo.id)}>
-                    Delete
-                  </button>
-                </div>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        <div className="column">
-          <h2>DOING</h2>
-          <ul className="task-list">
-            {doingItems.map((todo) => (
-              <li key={todo.id} className="task-card">
-                <div className="task-header">
-                  <span className="task-title">{todo.title}</span>
-                  <span className="task-status">{todo.status}</span>
-                </div>
-                <div className="task-due">
-                  {todo.dueDate ? `Due: ${formatDueDate(todo.dueDate)}` : 'No due date'}
-                </div>
-                <div className="task-due-editor">
-                  <input
-                    type="datetime-local"
-                    value={editingDueDates[todo.id] ?? formatForDateTimeLocal(todo.dueDate)}
-                    onChange={(event) =>
-                      setEditingDueDates({
-                        ...editingDueDates,
-                        [todo.id]: event.target.value,
-                      })
-                    }
-                  />
-                  <button
-                    onClick={() => {
-                      const localValue = editingDueDates[todo.id];
-                      const isoDueDate = localValue ? new Date(localValue).toISOString() : undefined;
-
-                      handleUpdateTodo({
-                        id: todo.id,
-                        dueDate: isoDueDate,
-                      });
-                    }}
-                  >
-                    Update Due Date
-                  </button>
-                </div>
-                <div className="task-actions">
-                  <select
-                    value={todo.status}
-                    onChange={(event) =>
-                      handleUpdateTodo({
-                        id: todo.id,
-                        status: event.target.value,
-                      })
-                    }
-                  >
-                    <option value="TODO">TODO</option>
-                    <option value="DOING">DOING</option>
-                    <option value="DONE">DONE</option>
-                  </select>
-                  <button onClick={() => handleDeleteTodo(todo.id)}>
-                    Delete
-                  </button>
-                </div>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        <div className="column">
-          <h2>DONE</h2>
-          <ul className="task-list">
-            {doneItems.map((todo) => (
-              <li key={todo.id} className="task-card">
-                <div className="task-header">
-                  <span className="task-title">{todo.title}</span>
-                  <span className="task-status">{todo.status}</span>
-                </div>
-                <div className="task-due">
-                  {todo.dueDate ? `Due: ${formatDueDate(todo.dueDate)}` : 'No due date'}
-                </div>
-                <div className="task-due-editor">
-                  <input
-                    type="datetime-local"
-                    value={editingDueDates[todo.id] ?? formatForDateTimeLocal(todo.dueDate)}
-                    onChange={(event) =>
-                      setEditingDueDates({
-                        ...editingDueDates,
-                        [todo.id]: event.target.value,
-                      })
-                    }
-                  />
-                  <button
-                    onClick={() => {
-                      const localValue = editingDueDates[todo.id];
-                      const isoDueDate = localValue ? new Date(localValue).toISOString() : undefined;
-
-                      handleUpdateTodo({
-                        id: todo.id,
-                        dueDate: isoDueDate,
-                      });
-                    }}
-                  >
-                    Update Due Date
-                  </button>
-                </div>
-                <div className="task-actions">
-                  <select
-                    value={todo.status}
-                    onChange={(event) =>
-                      handleUpdateTodo({
-                        id: todo.id,
-                        status: event.target.value,
-                      })
-                    }
-                  >
-                    <option value="TODO">TODO</option>
-                    <option value="DOING">DOING</option>
-                    <option value="DONE">DONE</option>
-                  </select>
-                  <button onClick={() => handleDeleteTodo(todo.id)}>
-                    Delete
-                  </button>
-                </div>
-              </li>
-            ))}
-          </ul>
-        </div>
+        <TaskColumn
+          title="TODO"
+          tasks={todoItems}
+          editingDueDates={editingDueDates}
+          setEditingDueDates={setEditingDueDates}
+          formatDueDate={formatDueDate}
+          formatForDateTimeLocal={formatForDateTimeLocal}
+          handleUpdateTodo={handleUpdateTodo}
+          handleDeleteTodo={handleDeleteTodo}
+        />
+        <TaskColumn
+          title="DOING"
+          tasks={doingItems}
+          editingDueDates={editingDueDates}
+          setEditingDueDates={setEditingDueDates}
+          formatDueDate={formatDueDate}
+          formatForDateTimeLocal={formatForDateTimeLocal}
+          handleUpdateTodo={handleUpdateTodo}
+          handleDeleteTodo={handleDeleteTodo}
+        />
+        <TaskColumn
+          title="DONE"
+          tasks={doneItems}
+          editingDueDates={editingDueDates}
+          setEditingDueDates={setEditingDueDates}
+          formatDueDate={formatDueDate}
+          formatForDateTimeLocal={formatForDateTimeLocal}
+          handleUpdateTodo={handleUpdateTodo}
+          handleDeleteTodo={handleDeleteTodo}
+        />
       </div>
     </div>
   );
