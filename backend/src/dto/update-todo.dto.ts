@@ -1,4 +1,4 @@
-import { IsBoolean, IsOptional, IsString, IsDateString } from 'class-validator';
+import { IsOptional, IsString, IsDateString, IsIn } from 'class-validator';
 
 export class UpdateTodoDto {
     @IsOptional()
@@ -6,10 +6,10 @@ export class UpdateTodoDto {
     title?: string;
 
     @IsOptional()
-    @IsBoolean()
-    completed?: boolean;
-
-    @IsOptional()
     @IsDateString()
     dueDate?: string;
+
+    @IsOptional()
+    @IsIn(['TODO', 'DOING', 'DONE'])
+    status?: string;
 }

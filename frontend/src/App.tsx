@@ -7,7 +7,7 @@ const GET_TODOS = gql`
     todos {
       id
       title
-      completed
+      status
       dueDate
     }
   }`;
@@ -17,7 +17,7 @@ const CREATE_TODO = gql`
     createTodo(input: $input) {
       id
       title
-      completed
+      status
       dueDate
     }
   }
@@ -28,7 +28,7 @@ const UPDATE_TODO = gql`
     updateTodo(input: $input) {
       id
       title
-      completed
+      status
       dueDate
     }
   }
@@ -39,7 +39,7 @@ const DELETE_TODO = gql`
     deleteTodo(id: $id){
       id
       title
-      completed
+      status
       dueDate
     }
   }
@@ -48,7 +48,7 @@ const DELETE_TODO = gql`
 type Todo = {
   id: number;
   title: string;
-  completed: boolean;
+  status: string;
   dueDate: string | null;
 };
 
@@ -64,6 +64,7 @@ type CreateTodoVariables = {
   input: {
     title: string;
     dueDate?: string;
+    status?: string;
   };
 };
 
@@ -75,8 +76,8 @@ type UpdateTodoVariables = {
   input: {
     id: number;
     title?: string;
-    completed?: boolean;
     dueDate?: string;
+    status?: string;
   }
 }
 
@@ -103,6 +104,7 @@ function App() {
   const [deleteTodo] = useMutation<DeleteTodoData, DeleteTodoVariables>(DELETE_TODO, {
     refetchQueries: [{ query: GET_TODOS }],
   });
+  const [status, setStatus] = useState('TODO');
   const [editingDueDates, setEditingDueDates] = useState<Record<number, string>>({});
 
   const handleCreateTodo = async () => {
@@ -114,11 +116,13 @@ function App() {
         input: {
           title,
           dueDate: isoDueDate,
+          status,
         },
       },
     });
     setTitle('');
     setDueDate('');
+    setStatus('TODO');
   };
 
   const handleUpdateTodo = async (input: UpdateTodoVariables['input']) => {
@@ -171,12 +175,20 @@ function App() {
           value={dueDate}
           onChange={(event) => setDueDate(event.target.value)}
         />
+        <select
+          value={status}
+          onChange={(event) => setStatus(event.target.value)}
+        >
+          <option value="TODO">TODO</option>
+          <option value="DOING">DOING</option>
+          <option value="DONE">DONE</option>
+        </select>
         <button onClick={handleCreateTodo}>Add Todo</button>
       </div>
       <ul>
         {data?.todos.map((todo) => (
           <li key={todo.id}>
-            {todo.title} - {todo.completed ? 'Done' : 'Not done'}
+            {todo.title} - {todo.status}
             {todo.dueDate ? ` - Due: ${formatDueDate(todo.dueDate)}` : ' - No due date'}
             <input
               type="datetime-local"
@@ -201,14 +213,19 @@ function App() {
             >
               Update Due Date
             </button>
-            <button
-              onClick={() => handleUpdateTodo({
-                id: todo.id,
-                completed: !todo.completed,
-              })}
+            <select
+              value={todo.status}
+              onChange={(event) =>
+                handleUpdateTodo({
+                  id: todo.id,
+                  status: event.target.value,
+                })
+              }
             >
-              Toggle Completed
-            </button>
+              <option value="TODO">TODO</option>
+              <option value="DOING">DOING</option>
+              <option value="DONE">DONE</option>
+            </select>
             <button
               onClick={() => handleDeleteTodo(todo.id)}
             >

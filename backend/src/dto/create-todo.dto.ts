@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty, IsOptional, IsDateString } from 'class-validator';
+import { IsString, IsNotEmpty, IsOptional, IsDateString, IsIn } from 'class-validator';
 
 export class CreateTodoDto {
     @IsString()
@@ -8,4 +8,8 @@ export class CreateTodoDto {
     @IsOptional()
     @IsDateString()
     dueDate?: string;
+
+    @IsOptional()
+    @IsIn(['TODO', 'DOING', 'DONE'])
+    status?: string;
 }

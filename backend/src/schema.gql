@@ -5,7 +5,7 @@
 type Todo {
   id: Int!
   title: String!
-  completed: Boolean!
+  status: String!
   dueDate: DateTime
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -30,11 +30,12 @@ type Mutation {
 input CreateTodoInput {
   title: String!
   dueDate: String
+  status: String
 }
 
 input UpdateTodoInput {
   id: Int!
   title: String
-  completed: Boolean
   dueDate: String
+  status: String
 }
