@@ -1,18 +1,21 @@
 .app {
   padding: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .create-form {
   display: flex;
   gap: 12px;
   align-items: center;
+  justify-content: center;
   flex-wrap: wrap;
   margin-bottom: 32px;
 }
 
 .board {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 24px;
   align-items: start;
 }
@@ -22,6 +25,15 @@
   border-radius: 12px;
   padding: 16px;
   background: var(--bg);
+  text-align: left;
+  min-width: 0;
+}
+
+.column h2 {
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+  text-align: center;
 }
 
 .task-list {
@@ -100,10 +112,4 @@
 .task-due-editor button,
 .task-actions button {
   cursor: pointer;
-}
-
-.column h2 {
-  margin-bottom: 16px;
-  padding-bottom: 8px;
-  border-bottom: 1px solid var(--border);
 }
