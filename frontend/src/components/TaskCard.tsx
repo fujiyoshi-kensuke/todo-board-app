@@ -1,3 +1,5 @@
+import { useNavigate } from 'react-router-dom';
+
 type Todo = {
     id: number;
     title: string;
@@ -32,6 +34,9 @@ export function TaskCard({
     handleUpdateTodo,
     handleDeleteTodo,
 }: TaskCardProps) {
+
+    const navigate = useNavigate();
+
     return (
         <li className="task-card">
         <div className="task-header">
@@ -87,6 +92,10 @@ export function TaskCard({
             <option value="DOING">DOING</option>
             <option value="DONE">DONE</option>
             </select>
+
+            <button onClick={() => navigate(`/tasks/${todo.id}`)}>
+                Details
+            </button>
 
             <button onClick={() => handleDeleteTodo(todo.id)}>
             Delete

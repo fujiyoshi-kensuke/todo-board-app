@@ -20,6 +20,7 @@ scalar DateTime
 type Query {
   hello: String!
   todos: [Todo!]!
+  todo(id: Int!): Todo!
 }
 
 type Mutation {

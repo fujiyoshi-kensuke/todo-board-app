@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { TaskColumn } from './components/TaskColumn';
 import { Routes, Route, useNavigate } from 'react-router-dom';
 import { NewTaskPage } from './pages/NewTaskPage';
+import { TaskDetailPage } from './pages/TaskDetailPage';
 import './App.css';
 
 const GET_TODOS = gql`
@@ -262,6 +263,10 @@ function App() {
             handleCreateTodo={handleCreateTodo}
           />
         }
+      />
+      <Route
+        path="/tasks/:id"
+        element={<TaskDetailPage />}
       />
     </Routes>
   );

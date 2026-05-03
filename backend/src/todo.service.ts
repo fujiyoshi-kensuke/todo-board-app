@@ -75,4 +75,14 @@ export class TodoService {
             throw error;
         }
     }
+
+    async getTodoById(id: number) {
+        const todo = await this.prismaService.todo.findUnique({
+            where: { id },
+        });
+        if (!todo) {
+            throw new NotFoundException(`Todo with id ${id} not found`);
+        }
+        return todo;
+    }
 }

@@ -40,4 +40,11 @@ export class TodoResolver {
     ): Promise<Todo> {
         return this.todoService.deleteTodo(id);
     }
+
+    @Query(() => Todo)
+    todo(
+        @Args('id', { type: () => Int }) id: number
+    ): Promise<Todo> {
+        return this.todoService.getTodoById(id);
+    }
 }
