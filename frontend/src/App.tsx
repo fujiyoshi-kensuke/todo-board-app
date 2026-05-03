@@ -2,6 +2,8 @@ import { gql } from '@apollo/client';
 import { useQuery, useMutation } from '@apollo/client/react';
 import { useState } from 'react';
 import { TaskColumn } from './components/TaskColumn';
+import { Routes, Route, useNavigate } from 'react-router-dom';
+import { NewTaskPage } from './pages/NewTaskPage';
 import './App.css';
 
 const GET_TODOS = gql`
@@ -109,8 +111,9 @@ function App() {
   const [status, setStatus] = useState('TODO');
   const [editingDueDates, setEditingDueDates] = useState<Record<number, string>>({});
 
-  const [isCreateFormOpen, setIsCreateFormOpen] = useState(false);
   const [searchText, setSearchText] = useState('');
+
+  const navigate = useNavigate();
 
   const handleCreateTodo = async () => {
     const isoDueDate = dueDate ? new Date(dueDate).toISOString() : undefined;
@@ -174,86 +177,82 @@ function App() {
   const doneItems = filteredTodos.filter((todo) => todo.status === 'DONE');
 
   return(
-    <div className="app">
-      <div className="page-header">
-      <h1>Todo List</h1>
+    <Routes>
+      <Route
+        path="/"
+        element={
+          <div className="app">
+            <div className="page-header">
+            <h1>Todo List</h1>
 
-      <div className="header-actions">
-        <button
-          className="new-task-button"
-          onClick={() => setIsCreateFormOpen((prev) => !prev)}
-        >
-          + New Task
-        </button>
+            <div className="header-actions">
+              <button
+                className="new-task-button"
+                onClick={() => navigate('/tasks/new')}
+              >
+                + New Task
+              </button>
 
-        <input
-          className="search-input"
-          type="text"
-          value={searchText}
-          onChange={(event) => setSearchText(event.target.value)}
-          placeholder="Search tasks..."
-        />
-      </div>
-    </div>
+              <input
+                className="search-input"
+                type="text"
+                value={searchText}
+                onChange={(event) => setSearchText(event.target.value)}
+                placeholder="Search tasks..."
+              />
+            </div>
+          </div>
 
-    {isCreateFormOpen && (
-      <div className="create-form">
-        <input
-          type="text"
-          value={title}
-          onChange={(event) => setTitle(event.target.value)}
-          placeholder="New todo title"
-        />
-        <input
-          type="datetime-local"
-          value={dueDate}
-          onChange={(event) => setDueDate(event.target.value)}
-        />
-        <select
-          value={status}
-          onChange={(event) => setStatus(event.target.value)}
-        >
-          <option value="TODO">TODO</option>
-          <option value="DOING">DOING</option>
-          <option value="DONE">DONE</option>
-        </select>
-        <button onClick={handleCreateTodo}>Add Todo</button>
-      </div>
-    )}
-
-      <div className="board">
-        <TaskColumn
-          title="TODO"
-          tasks={todoItems}
-          editingDueDates={editingDueDates}
-          setEditingDueDates={setEditingDueDates}
-          formatDueDate={formatDueDate}
-          formatForDateTimeLocal={formatForDateTimeLocal}
-          handleUpdateTodo={handleUpdateTodo}
-          handleDeleteTodo={handleDeleteTodo}
-        />
-        <TaskColumn
-          title="DOING"
-          tasks={doingItems}
-          editingDueDates={editingDueDates}
-          setEditingDueDates={setEditingDueDates}
-          formatDueDate={formatDueDate}
-          formatForDateTimeLocal={formatForDateTimeLocal}
-          handleUpdateTodo={handleUpdateTodo}
-          handleDeleteTodo={handleDeleteTodo}
-        />
-        <TaskColumn
-          title="DONE"
-          tasks={doneItems}
-          editingDueDates={editingDueDates}
-          setEditingDueDates={setEditingDueDates}
-          formatDueDate={formatDueDate}
-          formatForDateTimeLocal={formatForDateTimeLocal}
-          handleUpdateTodo={handleUpdateTodo}
-          handleDeleteTodo={handleDeleteTodo}
-        />
-      </div>
-    </div>
+            <div className="board">
+              <TaskColumn
+                title="TODO"
+                tasks={todoItems}
+                editingDueDates={editingDueDates}
+                setEditingDueDates={setEditingDueDates}
+                formatDueDate={formatDueDate}
+                formatForDateTimeLocal={formatForDateTimeLocal}
+                handleUpdateTodo={handleUpdateTodo}
+                handleDeleteTodo={handleDeleteTodo}
+              />
+              <TaskColumn
+                title="DOING"
+                tasks={doingItems}
+                editingDueDates={editingDueDates}
+                setEditingDueDates={setEditingDueDates}
+                formatDueDate={formatDueDate}
+                formatForDateTimeLocal={formatForDateTimeLocal}
+                handleUpdateTodo={handleUpdateTodo}
+                handleDeleteTodo={handleDeleteTodo}
+              />
+              <TaskColumn
+                title="DONE"
+                tasks={doneItems}
+                editingDueDates={editingDueDates}
+                setEditingDueDates={setEditingDueDates}
+                formatDueDate={formatDueDate}
+                formatForDateTimeLocal={formatForDateTimeLocal}
+                handleUpdateTodo={handleUpdateTodo}
+                handleDeleteTodo={handleDeleteTodo}
+              />
+            </div>
+          </div>
+        }
+      />
+      <Route
+        path="/tasks/new"
+        element={
+          <NewTaskPage
+            title={title}
+            setTitle={setTitle}
+            dueDate={dueDate}
+            setDueDate={setDueDate}
+            status={status}
+            setStatus={setStatus}
+            handleCreateTodo={handleCreateTodo}
+          />
+        }
+      />
+    </Routes>
   );
 }
 
