@@ -5,6 +5,7 @@ import { TaskColumn } from './components/TaskColumn';
 import { Routes, Route, useNavigate } from 'react-router-dom';
 import { NewTaskPage } from './pages/NewTaskPage';
 import { TaskDetailPage } from './pages/TaskDetailPage';
+import { TaskEditPage } from './pages/TaskEditPage';
 import './App.css';
 
 const GET_TODOS = gql`
@@ -267,6 +268,10 @@ function App() {
       <Route
         path="/tasks/:id"
         element={<TaskDetailPage />}
+      />
+      <Route
+        path="/tasks/:id/edit"
+        element={<TaskEditPage />}
       />
     </Routes>
   );

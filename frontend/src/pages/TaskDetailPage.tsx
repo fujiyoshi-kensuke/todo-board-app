@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client';
 import { useQuery } from '@apollo/client/react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 
 const GET_TODO = gql`
     query GetTodo($id: Int!) {
@@ -33,6 +33,7 @@ type GetTodoVariables = {
 export function TaskDetailPage() {
     const { id } = useParams();
     const todoId = Number(id);
+    const navigate = useNavigate();
 
     const { loading, error, data } = useQuery<GetTodoData, GetTodoVariables>(GET_TODO, {
         variables: { id: todoId },
@@ -47,13 +48,18 @@ export function TaskDetailPage() {
     if (error) return <p>Error: {error.message}</p>;
 
     return (
-    <div className="app">
-        <h1>Task Detail</h1>
-        <p>ID: {data?.todo.id}</p>
-        <p>Title: {data?.todo.title}</p>
-        <p>Status: {data?.todo.status}</p>
-        <p>Description: {data?.todo.description ?? 'No description'}</p>
-        <p>Due: {formatDueDate(data?.todo.dueDate ?? null)}</p>
-    </div>
+        <div className="app">
+            <button onClick={() => navigate(-1)}>Back</button>
+            <button onClick={() => navigate(`/tasks/${todoId}/edit`)}>
+            Edit
+            </button>
+
+            <h1>Task Detail</h1>
+            <p>ID: {data?.todo.id}</p>
+            <p>Title: {data?.todo.title}</p>
+            <p>Status: {data?.todo.status}</p>
+            <p>Description: {data?.todo.description ?? 'No description'}</p>
+            <p>Due: {formatDueDate(data?.todo.dueDate ?? null)}</p>
+        </div>
     );
 }

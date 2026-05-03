@@ -152,3 +152,50 @@
   line-height: 1.4;
   white-space: pre-wrap;
 }
+
+.edit-page {
+  max-width: 720px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  text-align: left;
+}
+
+.edit-task-id {
+  margin: 0;
+  color: var(--text);
+}
+
+.edit-input,
+.edit-textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font: inherit;
+  background: var(--bg);
+  color: var(--text-h);
+  box-sizing: border-box;
+}
+
+.edit-textarea {
+  min-height: 140px;
+  resize: vertical;
+}
+
+.edit-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.edit-actions button {
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font: inherit;
+  background: var(--bg);
+  color: var(--text-h);
+  cursor: pointer;
+}
