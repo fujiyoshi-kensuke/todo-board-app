@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom';
+import { Eye, Trash2 } from 'lucide-react';
 
 type Todo = {
     id: number;
@@ -17,90 +18,83 @@ type UpdateTodoInput = {
 
 type TaskCardProps = {
     todo: Todo;
-    editingDueDates: Record<number, string>;
-    setEditingDueDates: React.Dispatch<React.SetStateAction<Record<number, string>>>;
     formatDueDate: (value: string | null) => string;
-    formatForDateTimeLocal: (value: string | null) => string;
     handleUpdateTodo: (input: UpdateTodoInput) => Promise<void>;
     handleDeleteTodo: (id: number) => Promise<void>;
 };
 
 export function TaskCard({
     todo,
-    editingDueDates,
-    setEditingDueDates,
     formatDueDate,
-    formatForDateTimeLocal,
     handleUpdateTodo,
     handleDeleteTodo,
 }: TaskCardProps) {
-
     const navigate = useNavigate();
+    const getStatusClassName = (status: string) => {
+        switch (status) {
+            case 'TODO':
+                return 'task-status-select task-status-todo';
+            case 'DOING':
+                return 'task-status-select task-status-doing';
+            case 'DONE':
+                return 'task-status-select task-status-done';
+            default:
+                return 'task-status-select';
+        }
+    };
 
     return (
         <li className="task-card">
-        <div className="task-header">
-            <span className="task-title">{todo.title}</span>
-            <span className="task-status">{todo.status}</span>
-        </div>
+            <div className="task-header">
+                <span className="task-title">{todo.title}</span>
 
-        <div className="task-due">
-            {todo.dueDate ? `Due: ${formatDueDate(todo.dueDate)}` : 'No due date'}
-        </div>
+                <div className="task-icon-actions">
+                    <button
+                        className="task-icon-button"
+                        onClick={() => navigate(`/tasks/${todo.id}`)}
+                        aria-label="View details"
+                        title="Details"
+                    >
+                        <Eye size={18} />
+                    </button>
 
-        {todo.description && (
-            <div className="task-description">{todo.description}</div>
-        )}
+                    <button
+                        className="task-icon-button"
+                        onClick={() => handleDeleteTodo(todo.id)}
+                        aria-label="Delete task"
+                        title="Delete"
+                    >
+                        <Trash2 size={18} />
+                    </button>
+                </div>
+            </div>
 
-        <div className="task-due-editor">
-            <input
-            type="datetime-local"
-            value={editingDueDates[todo.id] ?? formatForDateTimeLocal(todo.dueDate)}
-            onChange={(event) =>
-                setEditingDueDates({
-                ...editingDueDates,
-                [todo.id]: event.target.value,
-                })
-            }
-            />
-            <button
-            onClick={() => {
-                const localValue = editingDueDates[todo.id];
-                const isoDueDate = localValue ? new Date(localValue).toISOString() : undefined;
+            {todo.description && (
+                <div className="task-description">{todo.description}</div>
+            )}
 
-                handleUpdateTodo({
-                id: todo.id,
-                dueDate: isoDueDate,
-                });
-            }}
-            >
-            Update Due Date
-            </button>
-        </div>
+            <div className="task-footer">
+                <div className="task-due">
+                    {todo.dueDate ? formatDueDate(todo.dueDate) : 'No due date'}
+                </div>
 
-        <div className="task-actions">
-            <select
-            value={todo.status}
-            onChange={(event) =>
-                handleUpdateTodo({
-                id: todo.id,
-                status: event.target.value,
-                })
-            }
-            >
-            <option value="TODO">TODO</option>
-            <option value="DOING">DOING</option>
-            <option value="DONE">DONE</option>
-            </select>
-
-            <button onClick={() => navigate(`/tasks/${todo.id}`)}>
-                Details
-            </button>
-
-            <button onClick={() => handleDeleteTodo(todo.id)}>
-            Delete
-            </button>
-        </div>
+                <div className="task-actions">
+                    <select
+                        className={getStatusClassName(todo.status)}
+                        value={todo.status}
+                        onChange={(event) =>
+                            handleUpdateTodo({
+                                id: todo.id,
+                                status: event.target.value,
+                            })
+                        }
+                    >
+                        <option value="TODO">TODO</option>
+                        <option value="DOING">DOING</option>
+                        <option value="DONE">DONE</option>
+                    </select>
+                </div>
+            </div>
         </li>
     );
 }

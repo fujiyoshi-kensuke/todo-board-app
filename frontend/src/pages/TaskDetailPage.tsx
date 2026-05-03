@@ -48,18 +48,30 @@ export function TaskDetailPage() {
     if (error) return <p>Error: {error.message}</p>;
 
     return (
-        <div className="app">
-            <button onClick={() => navigate(-1)}>Back</button>
+    <div className="app">
+        <div className="detail-page">
+        <div className="detail-actions">
+            <button onClick={() => navigate('/')}>Back to Board</button>
             <button onClick={() => navigate(`/tasks/${todoId}/edit`)}>
             Edit
             </button>
-
-            <h1>Task Detail</h1>
-            <p>ID: {data?.todo.id}</p>
-            <p>Title: {data?.todo.title}</p>
-            <p>Status: {data?.todo.status}</p>
-            <p>Description: {data?.todo.description ?? 'No description'}</p>
-            <p>Due: {formatDueDate(data?.todo.dueDate ?? null)}</p>
         </div>
+
+        <h1 className="detail-title">{data?.todo.title}</h1>
+
+        <div className="detail-meta">
+            <p><strong>ID:</strong> {data?.todo.id}</p>
+            <p><strong>Status:</strong> {data?.todo.status}</p>
+            <p><strong>Due:</strong> {formatDueDate(data?.todo.dueDate ?? null)}</p>
+        </div>
+
+        <div className="detail-section">
+            <h2>Description</h2>
+            <p className="detail-description">
+            {data?.todo.description ?? 'No description'}
+            </p>
+        </div>
+        </div>
+    </div>
     );
 }

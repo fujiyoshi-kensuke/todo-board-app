@@ -112,49 +112,78 @@ export function TaskEditPage() {
 
     return (
         <div className="app">
-            <div className="edit-page">
-            <h1>Edit Task</h1>
-
-            <p className="edit-task-id">ID: {data?.todo.id}</p>
-
-            <input
-                className="edit-input"
-                type="text"
-                value={title}
-                onChange={(event) => setTitle(event.target.value)}
-                placeholder="Title"
-            />
-
-            <textarea
-                className="edit-textarea"
-                value={description}
-                onChange={(event) => setDescription(event.target.value)}
-                placeholder="Description"
-            />
-
-            <select
-                className="edit-input"
-                value={status}
-                onChange={(event) => setStatus(event.target.value)}
-            >
-                <option value="TODO">TODO</option>
-                <option value="DOING">DOING</option>
-                <option value="DONE">DONE</option>
-            </select>
-
-            <input
-                className="edit-input"
-                type="datetime-local"
-                value={dueDate}
-                onChange={(event) => setDueDate(event.target.value)}
-            />
-
-            <div className="edit-actions">
-                <button onClick={handleSave}>Save</button>
-                <button onClick={() => navigate(`/tasks/${todoId}`)}>
-                Cancel
+            <div className="edit-task-topbar">
+                <button
+                    className="edit-task-back"
+                    onClick={() => navigate(`/tasks/${todoId}`)}
+                >
+                    Back to Details
                 </button>
             </div>
+
+            <div className="edit-task-page">
+                <div className="edit-task-card">
+                    <h1>Edit Task</h1>
+
+                    <div className="edit-task-field">
+                        <label className="edit-task-label">Title</label>
+                        <input
+                            className="edit-task-input"
+                            type="text"
+                            value={title}
+                            onChange={(event) => setTitle(event.target.value)}
+                        />
+                    </div>
+
+                    <div className="edit-task-field">
+                        <label className="edit-task-label">Description</label>
+                        <textarea
+                            className="edit-task-textarea"
+                            value={description}
+                            onChange={(event) => setDescription(event.target.value)}
+                        />
+                    </div>
+
+                    <div className="edit-task-row">
+                        <div className="edit-task-field">
+                            <label className="edit-task-label">Status</label>
+                            <select
+                                className="edit-task-input"
+                                value={status}
+                                onChange={(event) => setStatus(event.target.value)}
+                            >
+                                <option value="TODO">TODO</option>
+                                <option value="DOING">DOING</option>
+                                <option value="DONE">DONE</option>
+                            </select>
+                        </div>
+
+                        <div className="edit-task-field">
+                            <label className="edit-task-label">Due Date</label>
+                            <input
+                                className="edit-task-input"
+                                type="datetime-local"
+                                value={dueDate}
+                                onChange={(event) => setDueDate(event.target.value)}
+                            />
+                        </div>
+                    </div>
+
+                    <div className="edit-task-actions">
+                        <button
+                            className="edit-task-primary"
+                            onClick={handleSave}
+                        >
+                            Save Changes
+                        </button>
+                        <button
+                            className="edit-task-secondary"
+                            onClick={() => navigate(`/tasks/${todoId}`)}
+                        >
+                            Cancel
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
     );

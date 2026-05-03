@@ -3,6 +3,7 @@ import { TaskCard } from './TaskCard';
 type Todo = {
     id: number;
     title: string;
+    description: string | null;
     status: string;
     dueDate: string | null;
 };
@@ -17,10 +18,7 @@ type UpdateTodoInput = {
 type TaskColumnProps = {
     title: string;
     tasks: Todo[];
-    editingDueDates: Record<number, string>;
-    setEditingDueDates: React.Dispatch<React.SetStateAction<Record<number, string>>>;
     formatDueDate: (value: string | null) => string;
-    formatForDateTimeLocal: (value: string | null) => string;
     handleUpdateTodo: (input: UpdateTodoInput) => Promise<void>;
     handleDeleteTodo: (id: number) => Promise<void>;
 };
@@ -28,30 +26,28 @@ type TaskColumnProps = {
 export function TaskColumn({
     title,
     tasks,
-    editingDueDates,
-    setEditingDueDates,
     formatDueDate,
-    formatForDateTimeLocal,
     handleUpdateTodo,
     handleDeleteTodo,
 }: TaskColumnProps) {
     return (
         <div className="column">
-        <h2>{title}</h2>
-        <ul className="task-list">
-            {tasks.map((todo) => (
-            <TaskCard
-                key={todo.id}
-                todo={todo}
-                editingDueDates={editingDueDates}
-                setEditingDueDates={setEditingDueDates}
-                formatDueDate={formatDueDate}
-                formatForDateTimeLocal={formatForDateTimeLocal}
-                handleUpdateTodo={handleUpdateTodo}
-                handleDeleteTodo={handleDeleteTodo}
-            />
-            ))}
-        </ul>
+            <div className="column-header">
+                <h2>{title}</h2>
+                <span className="column-count">{tasks.length}</span>
+            </div>
+
+            <ul className="task-list">
+                {tasks.map((todo) => (
+                    <TaskCard
+                        key={todo.id}
+                        todo={todo}
+                        formatDueDate={formatDueDate}
+                        handleUpdateTodo={handleUpdateTodo}
+                        handleDeleteTodo={handleDeleteTodo}
+                    />
+                ))}
+            </ul>
         </div>
     );
 }
