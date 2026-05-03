@@ -38,6 +38,7 @@ input CreateTodoInput {
 input UpdateTodoInput {
   id: Int!
   title: String
+  description: String
   dueDate: String
   status: String
 }

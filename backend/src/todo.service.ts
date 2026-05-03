@@ -40,6 +40,10 @@ export class TodoService {
             data.status = body.status as Prisma.TodoUpdateInput['status'];
         }
 
+        if (body.description !== undefined) {
+            data.description = body.description;
+        }
+
         try {
             return await this.prismaService.todo.update({
                 where: { id },
