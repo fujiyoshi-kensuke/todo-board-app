@@ -1,6 +1,7 @@
 type Todo = {
     id: number;
     title: string;
+    description: string | null;
     status: string;
     dueDate: string | null;
 };
@@ -41,6 +42,10 @@ export function TaskCard({
         <div className="task-due">
             {todo.dueDate ? `Due: ${formatDueDate(todo.dueDate)}` : 'No due date'}
         </div>
+
+        {todo.description && (
+            <div className="task-description">{todo.description}</div>
+        )}
 
         <div className="task-due-editor">
             <input

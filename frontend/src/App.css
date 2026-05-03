@@ -145,3 +145,10 @@
 .search-input {
   min-width: 240px;
 }
+
+.task-description {
+  font-size: 14px;
+  color: var(--text);
+  line-height: 1.4;
+  white-space: pre-wrap;
+}

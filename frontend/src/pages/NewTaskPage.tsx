@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 type NewTaskPageProps = {
     title: string;
     setTitle: React.Dispatch<React.SetStateAction<string>>;
+    description: string;
+    setDescription: React.Dispatch<React.SetStateAction<string>>;
     dueDate: string;
     setDueDate: React.Dispatch<React.SetStateAction<string>>;
     status: string;
@@ -18,6 +20,8 @@ export function NewTaskPage({
     status,
     setStatus,
     handleCreateTodo,
+    description,
+    setDescription,
 }: NewTaskPageProps) {
 
     const navigate = useNavigate();
@@ -25,6 +29,7 @@ export function NewTaskPage({
         await handleCreateTodo();
         navigate('/');
     };
+
     return (
         <div className="app">
             <h1>New Task</h1>
@@ -34,6 +39,11 @@ export function NewTaskPage({
                     value={title}
                     onChange={(event) => setTitle(event.target.value)}
                     placeholder="New todo title"
+                />
+                <textarea
+                    value={description}
+                    onChange={(event) => setDescription(event.target.value)}
+                    placeholder="Description"
                 />
                 <input
                     type="datetime-local"

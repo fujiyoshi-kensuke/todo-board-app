@@ -11,6 +11,7 @@ const GET_TODOS = gql`
     todos {
       id
       title
+      description
       status
       dueDate
     }
@@ -21,6 +22,7 @@ const CREATE_TODO = gql`
     createTodo(input: $input) {
       id
       title
+      description
       status
       dueDate
     }
@@ -32,6 +34,7 @@ const UPDATE_TODO = gql`
     updateTodo(input: $input) {
       id
       title
+      description
       status
       dueDate
     }
@@ -43,6 +46,7 @@ const DELETE_TODO = gql`
     deleteTodo(id: $id){
       id
       title
+      description
       status
       dueDate
     }
@@ -52,6 +56,7 @@ const DELETE_TODO = gql`
 type Todo = {
   id: number;
   title: string;
+  description: string | null;
   status: string;
   dueDate: string | null;
 };
@@ -67,6 +72,7 @@ type CreateTodoData = {
 type CreateTodoVariables = {
   input: {
     title: string;
+    description: string;
     dueDate?: string;
     status?: string;
   };
@@ -97,6 +103,7 @@ function App() {
   const { loading, error, data } = useQuery<GetTodosData>(GET_TODOS);
 
   const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
   const [dueDate, setDueDate] = useState('');
 
   const [createTodo] = useMutation<CreateTodoData, CreateTodoVariables>(CREATE_TODO, {
@@ -123,12 +130,14 @@ function App() {
       variables: {
         input: {
           title,
+          description,
           dueDate: isoDueDate,
           status,
         },
       },
     });
     setTitle('');
+    setDescription('');
     setDueDate('');
     setStatus('TODO');
   };
@@ -244,6 +253,8 @@ function App() {
           <NewTaskPage
             title={title}
             setTitle={setTitle}
+            description={description}
+            setDescription={setDescription}
             dueDate={dueDate}
             setDueDate={setDueDate}
             status={status}

@@ -5,6 +5,7 @@
 type Todo {
   id: Int!
   title: String!
+  description: String
   status: String!
   dueDate: DateTime
   createdAt: DateTime!
@@ -29,6 +30,7 @@ type Mutation {
 
 input CreateTodoInput {
   title: String!
+  description: String
   dueDate: String
   status: String
 }

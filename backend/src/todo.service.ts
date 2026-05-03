@@ -18,6 +18,7 @@ export class TodoService {
         return await this.prismaService.todo.create({
             data: {
                 title: body.title,
+                description: body.description,
                 dueDate: body.dueDate ? new Date(body.dueDate) : undefined,
                 status: body.status as Prisma.TodoCreateInput['status'],
             },

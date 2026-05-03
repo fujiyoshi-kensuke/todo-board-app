@@ -20,6 +20,7 @@ enum TodoStatus {
 model Todo {
   id Int @id @default(autoincrement())
   title String
+  description String?
   status TodoStatus @default(TODO)
   dueDate DateTime?
   createdAt DateTime @default(now())
