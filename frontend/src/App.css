@@ -3,8 +3,8 @@
    ========================= */
 .app {
   padding: 24px;
-  max-width: 1200px;
-  margin: 0 auto;
+  /* max-width: 1200px;
+  margin: 0 auto; */
 }
 
 /* =========================
@@ -99,8 +99,8 @@
     - Figma寄りに少し軽い背景と点線感のある見た目へ調整
    ========================= */
 .column {
-  border: 2px dashed #d9dde5;
-  border-radius: 18px;
+  border: 1px solid var(--border);
+  border-radius: 20px;
   padding: 20px;
   background: #f8fafc;
   text-align: left;
@@ -215,6 +215,7 @@
 }
 
 /* カード右上のアイコンボタン */
+/* 共通のアイコンボタン */
 .task-icon-button {
   border: none;
   background: transparent;
@@ -227,9 +228,22 @@
   cursor: pointer;
 }
 
+/* 共通 hover */
 .task-icon-button:hover {
   background: #f3f4f6;
   color: #111827;
+}
+
+/* 詳細アイコンは青 */
+.task-icon-button-view:hover {
+  background: #eff6ff;
+  color: #2563eb;
+}
+
+/* 削除アイコンは赤 */
+.task-icon-button-delete:hover {
+  background: #fef2f2;
+  color: #dc2626;
 }
 
 /* =========================
@@ -378,63 +392,155 @@
 
 /* =========================
   12. 詳細ページ
+    - Figmaに合わせて閲覧用カードレイアウトに調整
    ========================= */
-.detail-page {
-  max-width: 720px;
-  margin: 0 auto;
+.detail-topbar {
+  max-width: 1100px;
+  margin: 0 auto 24px;
   display: flex;
-  flex-direction: column;
-  gap: 20px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
   text-align: left;
 }
 
-.detail-actions {
-  display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
+/* 上部の戻るボタンを共通トーンで統一 */
+.detail-back,
+.edit-task-back,
+.new-task-back {
+  padding: 10px 16px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: #ffffff;
+  color: var(--text-h);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow:
+    0 1px 2px rgba(16, 24, 40, 0.03),
+    0 2px 8px rgba(16, 24, 40, 0.04);
 }
 
-.detail-actions button {
-  padding: 10px 14px;
+.detail-back:hover,
+.edit-task-back:hover,
+.new-task-back:hover {
+  background: #f8fafc;
+}
+
+.detail-page {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.detail-card {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 48px 50px;
   border: 1px solid var(--border);
-  border-radius: 8px;
-  font: inherit;
-  background: var(--bg);
-  color: var(--text-h);
-  cursor: pointer;
+  border-radius: 20px;
+  background: #ffffff;
+  box-shadow:
+    0 1px 2px rgba(16, 24, 40, 0.04),
+    0 4px 12px rgba(16, 24, 40, 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  text-align: left;
 }
 
 .detail-title {
   margin: 0;
+  font-size: 34px;
+  line-height: 1.2;
+  letter-spacing: -0.8px;
+  color: #0f172a;
 }
 
-.detail-meta {
+.detail-meta-inline {
   display: flex;
-  flex-direction: column;
-  gap: 8px;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
 }
 
-.detail-meta p {
+.detail-meta-text {
+  font-size: 16px;
+  color: #667085;
+  font-weight: 500;
+}
+
+.detail-meta-separator {
+  color: #c0c7d1;
+  font-size: 18px;
+}
+
+.detail-status-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.detail-status-todo {
+  background: #f3f4f6;
+  color: #4b5563;
+}
+
+.detail-status-doing {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+.detail-status-done {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.detail-divider {
+  border: none;
+  border-top: 1px solid var(--border);
   margin: 0;
 }
 
 .detail-section {
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 16px;
-  background: var(--bg);
+  border: none;
+  border-radius: 0;
+  padding: 0;
+  background: transparent;
 }
 
 .detail-section h2 {
-  margin-top: 0;
-  margin-bottom: 12px;
+  margin: 0 0 16px;
   text-align: left;
+  font-size: 20px;
+  color: var(--text-h);
 }
 
 .detail-description {
   margin: 0;
-  line-height: 1.6;
+  line-height: 1.7;
   white-space: pre-wrap;
+  color: var(--text);
+}
+
+.detail-edit-button {
+  padding: 12px 22px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: #ffffff;
+  color: var(--text-h);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.detail-edit-button.primary {
+  border: 1px solid #0f172a;
+  background: #020617;
+  color: #ffffff;
 }
 
 /* =========================
@@ -446,7 +552,7 @@
   text-align: left;
 }
 
-.new-task-back {
+/* .new-task-back {
   border: none;
   background: transparent;
   color: var(--text-h);
@@ -454,7 +560,7 @@
   font-weight: 600;
   cursor: pointer;
   padding: 0;
-}
+} */
 
 .new-task-page {
   max-width: 1100px;
@@ -547,32 +653,22 @@
 }
 
 /* =========================
-   14. 編集ページ
-   - Figmaに合わせてカード型フォームに調整
+  14. 編集ページ
+    - Figmaに合わせてカード型フォームに調整
    ========================= */
 .edit-task-topbar {
-  margin-bottom: 24px;
+  max-width: 900px;
+  margin: 0 auto 24px;
   text-align: left;
 }
 
-.edit-task-back {
-  border: none;
-  background: transparent;
-  color: var(--text-h);
-  font: inherit;
-  font-weight: 600;
-  cursor: pointer;
-  padding: 0;
-}
-
 .edit-task-page {
-  max-width: 1100px;
+  max-width: 900px;
   margin: 0 auto;
 }
 
 .edit-task-card {
-  max-width: 900px;
-  margin: 0 auto;
+  width: 100%;
   padding: 40px 48px;
   border: 1px solid var(--border);
   border-radius: 20px;
@@ -584,6 +680,7 @@
   flex-direction: column;
   gap: 28px;
   text-align: left;
+  box-sizing: border-box;
 }
 
 .edit-task-card h1 {

@@ -50,7 +50,7 @@ export function TaskCard({
 
                 <div className="task-icon-actions">
                     <button
-                        className="task-icon-button"
+                        className="task-icon-button task-icon-button-view"
                         onClick={() => navigate(`/tasks/${todo.id}`)}
                         aria-label="View details"
                         title="Details"
@@ -59,7 +59,7 @@ export function TaskCard({
                     </button>
 
                     <button
-                        className="task-icon-button"
+                        className="task-icon-button task-icon-button-delete"
                         onClick={() => handleDeleteTodo(todo.id)}
                         aria-label="Delete task"
                         title="Delete"
