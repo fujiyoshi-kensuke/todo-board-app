@@ -1,9 +1,64 @@
+/* =========================
+  1. ページ全体の共通レイアウト
+   ========================= */
 .app {
   padding: 24px;
-  max-width: 1200px;
-  margin: 0 auto;
+  /* max-width: 1200px;
+  margin: 0 auto; */
 }
 
+/* =========================
+  2. ボードページ上部ヘッダー
+    - タイトル
+    - 検索バー
+    - New Task ボタン
+   ========================= */
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.new-task-button,
+.search-input {
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font: inherit;
+  background: var(--bg);
+  color: var(--text-h);
+}
+
+.new-task-button {
+  cursor: pointer;
+}
+
+.search-input {
+  min-width: 280px;
+}
+
+.sort-select {
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font: inherit;
+  background: var(--bg);
+  color: var(--text-h);
+  min-width: 140px;
+}
+
+/* =========================
+  3. 新規作成ページフォーム
+    - NewTaskPage で使用
+   ========================= */
 .create-form {
   display: flex;
   gap: 12px;
@@ -13,93 +68,9 @@
   margin-bottom: 32px;
 }
 
-.board {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 24px;
-  align-items: start;
-}
-
-.column {
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 16px;
-  background: var(--bg);
-  text-align: left;
-  min-width: 0;
-}
-
-.column h2 {
-  margin-bottom: 16px;
-  padding-bottom: 8px;
-  border-bottom: 1px solid var(--border);
-  text-align: center;
-}
-
-.task-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.task-card {
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 12px;
-  margin-bottom: 12px;
-  background: var(--bg);
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.task-card:last-child {
-  margin-bottom: 0;
-}
-
-.task-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 12px;
-}
-
-.task-title {
-  font-weight: 600;
-  color: var(--text-h);
-}
-
-.task-status {
-  font-size: 14px;
-  padding: 4px 8px;
-  border-radius: 999px;
-  background: var(--accent-bg);
-  color: var(--accent);
-}
-
-.task-due {
-  font-size: 14px;
-}
-
-.task-due-editor {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-.task-actions {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
 .create-form input,
 .create-form select,
-.create-form button,
-.task-due-editor input,
-.task-due-editor button,
-.task-actions select,
-.task-actions button {
+.create-form button {
   padding: 10px 12px;
   border: 1px solid var(--border);
   border-radius: 8px;
@@ -108,8 +79,675 @@
   color: var(--text-h);
 }
 
-.create-form button,
+.create-form button {
+  cursor: pointer;
+}
+
+/* =========================
+  4. ボード全体（3カラム）
+   ========================= */
+.board {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+  align-items: start;
+}
+
+/* =========================
+  5. 各カラム
+    - TODO / DOING / DONE
+    - Figma寄りに少し軽い背景と点線感のある見た目へ調整
+   ========================= */
+.column {
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 20px;
+  background: #f8fafc;
+  text-align: left;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  height: 70vh;
+}
+
+.column-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.column-header h2 {
+  margin: 0;
+  padding: 0;
+  border: none;
+  text-align: left;
+  font-size: 22px;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.column-count {
+  min-width: 32px;
+  height: 32px;
+  padding: 0 10px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #eef2f7;
+  color: #6b7280;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* =========================
+  6. カラム内のタスクリスト
+   ========================= */
+.task-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  overflow-y: auto;
+  flex: 1;
+}
+
+/* =========================
+  7. タスクカード全体
+    - 一覧で面積を取りすぎないようにしつつ、
+      Figmaのような少し洗練されたカード感に調整
+   ========================= */
+.task-card {
+  border: 1px solid #d9dde5;
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 16px;
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  box-shadow:
+    0 1px 2px rgba(16, 24, 40, 0.04),
+    0 4px 12px rgba(16, 24, 40, 0.06);
+}
+
+.task-card:last-child {
+  margin-bottom: 0;
+}
+
+/* =========================
+  8. カード上段
+    - 左: タイトル
+    - 右: Details / Delete などの軽い操作
+   ========================= */
+.task-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.task-title {
+  font-size: 18px;
+  line-height: 1.35;
+  font-weight: 700;
+  color: #111827;
+  flex: 1;
+}
+
+/* 旧statusバッジは今の構成では未使用だが、
+   将来戻す可能性に備えて残すならそのままでもよい */
+.task-status {
+  font-size: 14px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: var(--accent-bg);
+  color: var(--accent);
+}
+
+/* カード右上の省スペースアクション */
+.task-icon-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+/* カード右上のアイコンボタン */
+/* 共通のアイコンボタン */
+.task-icon-button {
+  border: none;
+  background: transparent;
+  color: #6b7280;
+  padding: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+/* 共通 hover */
+.task-icon-button:hover {
+  background: #f3f4f6;
+  color: #111827;
+}
+
+/* 詳細アイコンは青 */
+.task-icon-button-view:hover {
+  background: #eff6ff;
+  color: #2563eb;
+}
+
+/* 削除アイコンは赤 */
+.task-icon-button-delete:hover {
+  background: #fef2f2;
+  color: #dc2626;
+}
+
+/* =========================
+  9. カード内 description
+    - 一覧では短く見せる
+    - 2行で省略して一覧性を上げる
+   ========================= */
+.task-description {
+  font-size: 15px;
+  color: #4b5563;
+  line-height: 1.55;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* =========================
+  10. カード下段
+    - 左: due date
+    - 右: status select
+   ========================= */
+.task-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.task-due {
+  font-size: 14px;
+  color: #6b7280;
+  line-height: 1.4;
+}
+
+/* 旧 due date 編集欄は一覧簡潔化のため現在未使用 */
+.task-due-editor {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* 下段右側の status 操作 */
+.task-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* due date editor は今は未使用だが残すならここ */
+.task-due-editor input,
+.task-due-editor button {
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font: inherit;
+  background: var(--bg);
+  color: var(--text-h);
+}
+
+/* status select 共通 */
+.task-status-select {
+  min-width: 120px;
+  padding: 10px 14px;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* status ごとの色
+    - TODO: グレー
+    - DOING: 青
+    - DONE: 緑 */
+.task-status-todo {
+  background: #f3f4f6;
+  color: #4b5563;
+}
+
+.task-status-doing {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+.task-status-done {
+  background: #dcfce7;
+  color: #15803d;
+}
+
 .task-due-editor button,
 .task-actions button {
   cursor: pointer;
+}
+
+/* =========================
+  11. 編集ページ
+   ========================= */
+.edit-page {
+  max-width: 720px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  text-align: left;
+}
+
+.edit-task-id {
+  margin: 0;
+  color: var(--text);
+}
+
+.edit-input,
+.edit-textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font: inherit;
+  background: var(--bg);
+  color: var(--text-h);
+  box-sizing: border-box;
+}
+
+.edit-textarea {
+  min-height: 140px;
+  resize: vertical;
+}
+
+.edit-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.edit-actions button {
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font: inherit;
+  background: var(--bg);
+  color: var(--text-h);
+  cursor: pointer;
+}
+
+/* =========================
+  12. 詳細ページ
+    - Figmaに合わせて閲覧用カードレイアウトに調整
+   ========================= */
+.detail-topbar {
+  max-width: 1100px;
+  margin: 0 auto 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  text-align: left;
+}
+
+/* 上部の戻るボタンを共通トーンで統一 */
+.detail-back,
+.edit-task-back,
+.new-task-back {
+  padding: 10px 16px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: #ffffff;
+  color: var(--text-h);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow:
+    0 1px 2px rgba(16, 24, 40, 0.03),
+    0 2px 8px rgba(16, 24, 40, 0.04);
+}
+
+.detail-back:hover,
+.edit-task-back:hover,
+.new-task-back:hover {
+  background: #f8fafc;
+}
+
+.detail-page {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.detail-card {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 48px 50px;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  background: #ffffff;
+  box-shadow:
+    0 1px 2px rgba(16, 24, 40, 0.04),
+    0 4px 12px rgba(16, 24, 40, 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  text-align: left;
+}
+
+.detail-title {
+  margin: 0;
+  font-size: 34px;
+  line-height: 1.2;
+  letter-spacing: -0.8px;
+  color: #0f172a;
+}
+
+.detail-meta-inline {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.detail-meta-text {
+  font-size: 16px;
+  color: #667085;
+  font-weight: 500;
+}
+
+.detail-meta-separator {
+  color: #c0c7d1;
+  font-size: 18px;
+}
+
+.detail-status-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.detail-status-todo {
+  background: #f3f4f6;
+  color: #4b5563;
+}
+
+.detail-status-doing {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+.detail-status-done {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.detail-divider {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 0;
+}
+
+.detail-section {
+  border: none;
+  border-radius: 0;
+  padding: 0;
+  background: transparent;
+}
+
+.detail-section h2 {
+  margin: 0 0 16px;
+  text-align: left;
+  font-size: 20px;
+  color: var(--text-h);
+}
+
+.detail-description {
+  margin: 0;
+  line-height: 1.7;
+  white-space: pre-wrap;
+  color: var(--text);
+}
+
+.detail-edit-button {
+  padding: 12px 22px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: #ffffff;
+  color: var(--text-h);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.detail-edit-button.primary {
+  border: 1px solid #0f172a;
+  background: #020617;
+  color: #ffffff;
+}
+
+/* =========================
+  13. 新規作成ページ
+    - Figmaに合わせてカード型フォームに調整
+   ========================= */
+.new-task-topbar {
+  margin-bottom: 24px;
+  text-align: left;
+}
+
+/* .new-task-back {
+  border: none;
+  background: transparent;
+  color: var(--text-h);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+} */
+
+.new-task-page {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.new-task-card {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 40px 48px;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  background: #ffffff;
+  box-shadow:
+    0 1px 2px rgba(16, 24, 40, 0.04),
+    0 4px 12px rgba(16, 24, 40, 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  text-align: left;
+}
+
+.new-task-card h1 {
+  margin: 0;
+  font-size: 32px;
+  letter-spacing: -0.6px;
+}
+
+.new-task-field {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.new-task-label {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-h);
+}
+
+.new-task-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+.new-task-input,
+.new-task-textarea {
+  width: 100%;
+  padding: 14px 16px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  font: inherit;
+  background: #f3f4f6;
+  color: var(--text-h);
+  box-sizing: border-box;
+}
+
+.new-task-textarea {
+  min-height: 140px;
+  resize: vertical;
+}
+
+.new-task-actions {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+}
+
+.new-task-primary,
+.new-task-secondary {
+  padding: 12px 22px;
+  border-radius: 12px;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.new-task-primary {
+  border: 1px solid #0f172a;
+  background: #020617;
+  color: #ffffff;
+}
+
+.new-task-secondary {
+  border: 1px solid var(--border);
+  background: #ffffff;
+  color: var(--text-h);
+}
+
+/* =========================
+  14. 編集ページ
+    - Figmaに合わせてカード型フォームに調整
+   ========================= */
+.edit-task-topbar {
+  max-width: 900px;
+  margin: 0 auto 24px;
+  text-align: left;
+}
+
+.edit-task-page {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.edit-task-card {
+  width: 100%;
+  padding: 40px 48px;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  background: #ffffff;
+  box-shadow:
+    0 1px 2px rgba(16, 24, 40, 0.04),
+    0 4px 12px rgba(16, 24, 40, 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  text-align: left;
+  box-sizing: border-box;
+}
+
+.edit-task-card h1 {
+  margin: 0;
+  font-size: 32px;
+  letter-spacing: -0.6px;
+}
+
+.edit-task-field {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.edit-task-label {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-h);
+}
+
+.edit-task-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+.edit-task-input,
+.edit-task-textarea {
+  width: 100%;
+  padding: 14px 16px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  font: inherit;
+  background: #f3f4f6;
+  color: var(--text-h);
+  box-sizing: border-box;
+}
+
+.edit-task-textarea {
+  min-height: 140px;
+  resize: vertical;
+}
+
+.edit-task-actions {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+}
+
+.edit-task-primary,
+.edit-task-secondary {
+  padding: 12px 22px;
+  border-radius: 12px;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.edit-task-primary {
+  border: 1px solid #0f172a;
+  background: #020617;
+  color: #ffffff;
+}
+
+.edit-task-secondary {
+  border: 1px solid var(--border);
+  background: #ffffff;
+  color: var(--text-h);
 }

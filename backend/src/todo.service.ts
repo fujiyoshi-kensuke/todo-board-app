@@ -18,6 +18,7 @@ export class TodoService {
         return await this.prismaService.todo.create({
             data: {
                 title: body.title,
+                description: body.description,
                 dueDate: body.dueDate ? new Date(body.dueDate) : undefined,
                 status: body.status as Prisma.TodoCreateInput['status'],
             },
@@ -37,6 +38,10 @@ export class TodoService {
 
         if (body.status !== undefined) {
             data.status = body.status as Prisma.TodoUpdateInput['status'];
+        }
+
+        if (body.description !== undefined) {
+            data.description = body.description;
         }
 
         try {
@@ -69,5 +74,15 @@ export class TodoService {
             }
             throw error;
         }
+    }
+
+    async getTodoById(id: number) {
+        const todo = await this.prismaService.todo.findUnique({
+            where: { id },
+        });
+        if (!todo) {
+            throw new NotFoundException(`Todo with id ${id} not found`);
+        }
+        return todo;
     }
 }

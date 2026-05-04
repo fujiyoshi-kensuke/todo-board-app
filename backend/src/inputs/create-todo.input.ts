@@ -10,6 +10,11 @@ export class CreateTodoInput {
 
   @Field({ nullable: true })
   @IsOptional()
+  @IsString()
+  description?: string;
+
+  @Field({ nullable: true })
+  @IsOptional()
   @IsDateString()
   dueDate?: string;
 

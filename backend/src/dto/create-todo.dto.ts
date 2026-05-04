@@ -6,6 +6,10 @@ export class CreateTodoDto {
     title!: string;
 
     @IsOptional()
+    @IsString()
+    description?: string;
+
+    @IsOptional()
     @IsDateString()
     dueDate?: string;
 
