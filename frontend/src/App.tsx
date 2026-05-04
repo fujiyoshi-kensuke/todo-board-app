@@ -7,6 +7,8 @@ import { BoardHeader } from './components/BoardHeader';
 import { NewTaskPage } from './pages/NewTaskPage';
 import { TaskDetailPage } from './pages/TaskDetailPage';
 import { TaskEditPage } from './pages/TaskEditPage';
+import { DndContext, DragOverlay } from '@dnd-kit/core';
+import type { DragEndEvent, DragStartEvent } from '@dnd-kit/core';
 import './App.css';
 
 const GET_TODOS = gql`
@@ -122,6 +124,7 @@ function App() {
 
   const [searchText, setSearchText] = useState('');
   const [sortBy, setSortBy] = useState<'dueDate' | 'title'>('dueDate');
+  const [activeTodoId, setActiveTodoId] = useState<number | null>(null);
 
   const navigate = useNavigate();
 
@@ -159,6 +162,40 @@ function App() {
     });
   }
 
+  const handleDragEnd = async (event: DragEndEvent) => {
+    const { active, over } = event;
+
+    setActiveTodoId(null);
+
+    if (!over) return;
+
+    const targetStatus = over.id.toString();
+
+    if (
+      targetStatus !== 'TODO' &&
+      targetStatus !== 'DOING' &&
+      targetStatus !== 'DONE'
+    ) {
+      return;
+    }
+
+    const draggedTodo = data?.todos.find(
+      (todo) => todo.id.toString() === active.id.toString()
+    );
+
+    if (!draggedTodo) return;
+    if (draggedTodo.status === targetStatus) return;
+
+    await handleUpdateTodo({
+      id: draggedTodo.id,
+      status: targetStatus,
+    });
+  };
+
+  const handleDragStart = (event: DragStartEvent) => {
+    setActiveTodoId(Number(event.active.id));
+  };
+
   const formatDueDate = (value: string | null) => {
     if (!value) return 'No due date';
     return new Date(value).toLocaleString('ja-JP');
@@ -180,6 +217,10 @@ function App() {
     }
     return a.title.localeCompare(b.title);
   });
+  const activeTodo =
+    activeTodoId === null
+      ? null
+      : data?.todos.find((todo) => todo.id === activeTodoId) ?? null;
   const todoItems = sortedTodos.filter((todo) => todo.status === 'TODO');
   const doingItems = sortedTodos.filter((todo) => todo.status === 'DOING');
   const doneItems = sortedTodos.filter((todo) => todo.status === 'DONE');
@@ -197,30 +238,58 @@ function App() {
               setSortBy={setSortBy}
               onNewTaskClick={() => navigate('/tasks/new')}
             />
+            <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
+              <div className="board">
+                <TaskColumn
+                  title="TODO"
+                  status="TODO"
+                  tasks={todoItems}
+                  formatDueDate={formatDueDate}
+                  handleUpdateTodo={handleUpdateTodo}
+                  handleDeleteTodo={handleDeleteTodo}
+                />
+                <TaskColumn
+                  title="DOING"
+                  status="DOING"
+                  tasks={doingItems}
+                  formatDueDate={formatDueDate}
+                  handleUpdateTodo={handleUpdateTodo}
+                  handleDeleteTodo={handleDeleteTodo}
+                />
+                <TaskColumn
+                  title="DONE"
+                  status="DONE"
+                  tasks={doneItems}
+                  formatDueDate={formatDueDate}
+                  handleUpdateTodo={handleUpdateTodo}
+                  handleDeleteTodo={handleDeleteTodo}
+                />
+              </div>
 
-            <div className="board">
-              <TaskColumn
-                title="TODO"
-                tasks={todoItems}
-                formatDueDate={formatDueDate}
-                handleUpdateTodo={handleUpdateTodo}
-                handleDeleteTodo={handleDeleteTodo}
-              />
-              <TaskColumn
-                title="DOING"
-                tasks={doingItems}
-                formatDueDate={formatDueDate}
-                handleUpdateTodo={handleUpdateTodo}
-                handleDeleteTodo={handleDeleteTodo}
-              />
-              <TaskColumn
-                title="DONE"
-                tasks={doneItems}
-                formatDueDate={formatDueDate}
-                handleUpdateTodo={handleUpdateTodo}
-                handleDeleteTodo={handleDeleteTodo}
-              />
-            </div>
+              <DragOverlay>
+                {activeTodo ? (
+                  <div className="task-card task-card-overlay">
+                    <div className="task-header">
+                      <span className="task-title">{activeTodo.title}</span>
+                    </div>
+
+                    {activeTodo.description && (
+                      <div className="task-description">{activeTodo.description}</div>
+                    )}
+
+                    <div className="task-footer">
+                      <div className="task-due">
+                        {activeTodo.dueDate ? formatDueDate(activeTodo.dueDate) : 'No due date'}
+                      </div>
+
+                      <div className="task-actions">
+                        <span className="task-status-overlay">{activeTodo.status}</span>
+                      </div>
+                    </div>
+                  </div>
+                ) : null}
+              </DragOverlay>
+            </DndContext>
           </div>
         }
       />

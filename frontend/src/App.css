@@ -751,3 +751,35 @@
   background: #ffffff;
   color: var(--text-h);
 }
+
+.column-drag-over {
+  background: #eef4ff;
+  border-color: #93c5fd;
+}
+
+.task-card {
+  cursor: grab;
+}
+
+.task-card:active {
+  cursor: grabbing;
+}
+
+.task-card-overlay {
+  width: 320px;
+  box-shadow:
+    0 12px 24px rgba(16, 24, 40, 0.18),
+    0 4px 8px rgba(16, 24, 40, 0.12);
+}
+
+.task-status-overlay {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 12px;
+  border-radius: 12px;
+  background: #f3f4f6;
+  color: #4b5563;
+  font-size: 14px;
+  font-weight: 600;
+}
