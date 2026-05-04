@@ -2,6 +2,7 @@ import { gql } from '@apollo/client';
 import { useQuery, useMutation } from '@apollo/client/react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import { ArrowLeft } from 'lucide-react';
 
 const GET_TODO = gql`
     query GetTodo($id: Int!) {
@@ -113,12 +114,15 @@ export function TaskEditPage() {
     return (
         <div className="app">
             <div className="edit-task-topbar">
-                <button
-                    className="edit-task-back"
-                    onClick={() => navigate(`/tasks/${todoId}`)}
-                >
-                    Back to Details
-                </button>
+                <div className="topbar-inner topbar-inner-narrow">
+                    <button
+                        className="edit-task-back"
+                        onClick={() => navigate(`/tasks/${todoId}`)}
+                    >
+                        <ArrowLeft size={16} className="back-icon" />
+                        <span>Back to Details</span>
+                    </button>
+                </div>
             </div>
 
             <div className="edit-task-page">

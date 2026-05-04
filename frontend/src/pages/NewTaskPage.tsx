@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom';
+import { ArrowLeft } from 'lucide-react';
 
 type NewTaskPageProps = {
     title: string;
@@ -33,12 +34,15 @@ export function NewTaskPage({
     return (
         <div className="app">
             <div className="new-task-topbar">
-                <button
-                    className="new-task-back"
-                    onClick={() => navigate('/')}
-                >
-                    Back to Board
-                </button>
+                <div className="topbar-inner topbar-inner-narrow">
+                    <button
+                        className="new-task-back"
+                        onClick={() => navigate('/')}
+                    >
+                        <ArrowLeft size={16} className="back-icon" />
+                        <span>Back to Board</span>
+                    </button>
+                </div>
             </div>
 
             <div className="new-task-page">
@@ -93,16 +97,19 @@ export function NewTaskPage({
 
                     <div className="new-task-actions">
                         <button
-                            className="new-task-primary"
-                            onClick={handleSubmit}
+                        type="button"
+                        className="new-task-primary"
+                        onClick={handleSubmit}
                         >
-                            Create Task
+                        Create Task
                         </button>
+
                         <button
-                            className="new-task-secondary"
-                            onClick={() => navigate('/')}
+                        type="button"
+                        className="new-task-secondary"
+                        onClick={() => navigate('/')}
                         >
-                            Cancel
+                        Cancel
                         </button>
                     </div>
                 </div>

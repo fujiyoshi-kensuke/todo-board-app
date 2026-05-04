@@ -1,6 +1,7 @@
 import { gql } from '@apollo/client';
 import { useQuery } from '@apollo/client/react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { ArrowLeft } from 'lucide-react';
 
 const GET_TODO = gql`
     query GetTodo($id: Int!) {
@@ -41,10 +42,13 @@ export function TaskDetailPage() {
 
     const formatDueDate = (value: string | null) => {
         if (!value) return 'No due date';
-        return new Date(value).toLocaleDateString('en-US', {
+
+        return new Date(value).toLocaleString('ja-JP', {
+            year: 'numeric',
             month: 'short',
             day: 'numeric',
-            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
         });
     };
 
@@ -67,19 +71,22 @@ export function TaskDetailPage() {
     return (
         <div className="app">
             <div className="detail-topbar">
-                <button
-                    className="detail-back"
-                    onClick={() => navigate('/')}
-                >
-                    Back to Board
-                </button>
+                <div className="topbar-inner topbar-inner-wide">
+                    <button
+                        className="detail-back"
+                        onClick={() => navigate('/')}
+                    >
+                        <ArrowLeft size={16} className="back-icon" />
+                        <span>Back to Board</span>
+                    </button>
 
-                <button
-                    className="detail-edit-button primary"
-                    onClick={() => navigate(`/tasks/${todoId}/edit`)}
-                >
-                    Edit
-                </button>
+                    <button
+                        className="detail-edit-button primary"
+                        onClick={() => navigate(`/tasks/${todoId}/edit`)}
+                    >
+                        Edit
+                    </button>
+                </div>
             </div>
 
             <div className="detail-page">
