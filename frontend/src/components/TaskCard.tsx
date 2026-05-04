@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { Eye, Trash2 } from 'lucide-react';
+import { useDraggable } from '@dnd-kit/core';
 
 type Todo = {
     id: number;
@@ -30,6 +31,15 @@ export function TaskCard({
     handleDeleteTodo,
 }: TaskCardProps) {
     const navigate = useNavigate();
+
+    const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
+        id: todo.id.toString(),
+    });
+
+    const style = {
+        opacity: isDragging ? 0.3 : 1,
+    };
+
     const getStatusClassName = (status: string) => {
         switch (status) {
             case 'TODO':
@@ -44,25 +54,41 @@ export function TaskCard({
     };
 
     return (
-        <li className="task-card">
+        <li
+            ref={setNodeRef}
+            style={style}
+            className="task-card"
+            {...listeners}
+            {...attributes}
+        >
             <div className="task-header">
                 <span className="task-title">{todo.title}</span>
 
                 <div className="task-icon-actions">
                     <button
                         className="task-icon-button task-icon-button-view"
-                        onClick={() => navigate(`/tasks/${todo.id}`)}
+                        onPointerDown={(event) => event.stopPropagation()}
+                        onClick={(event) => {
+                            event.stopPropagation();
+                            navigate(`/tasks/${todo.id}`);
+                        }}
                         aria-label="View details"
                         title="Details"
+                        type="button"
                     >
                         <Eye size={18} />
                     </button>
 
                     <button
                         className="task-icon-button task-icon-button-delete"
-                        onClick={() => handleDeleteTodo(todo.id)}
+                        onPointerDown={(event) => event.stopPropagation()}
+                        onClick={(event) => {
+                            event.stopPropagation();
+                            handleDeleteTodo(todo.id);
+                        }}
                         aria-label="Delete task"
                         title="Delete"
+                        type="button"
                     >
                         <Trash2 size={18} />
                     </button>
@@ -82,12 +108,14 @@ export function TaskCard({
                     <select
                         className={getStatusClassName(todo.status)}
                         value={todo.status}
+                        onPointerDown={(event) => event.stopPropagation()}
                         onChange={(event) =>
                             handleUpdateTodo({
                                 id: todo.id,
                                 status: event.target.value,
                             })
                         }
+                        onClick={(event) => event.stopPropagation()}
                     >
                         <option value="TODO">TODO</option>
                         <option value="DOING">DOING</option>

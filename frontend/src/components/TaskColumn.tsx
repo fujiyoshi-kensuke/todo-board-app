@@ -1,3 +1,4 @@
+import { useDroppable } from '@dnd-kit/core';
 import { TaskCard } from './TaskCard';
 
 type Todo = {
@@ -17,6 +18,7 @@ type UpdateTodoInput = {
 
 type TaskColumnProps = {
     title: string;
+    status: 'TODO' | 'DOING' | 'DONE';
     tasks: Todo[];
     formatDueDate: (value: string | null) => string;
     handleUpdateTodo: (input: UpdateTodoInput) => Promise<void>;
@@ -25,13 +27,21 @@ type TaskColumnProps = {
 
 export function TaskColumn({
     title,
+    status,
     tasks,
     formatDueDate,
     handleUpdateTodo,
     handleDeleteTodo,
 }: TaskColumnProps) {
+    const { setNodeRef, isOver } = useDroppable({
+        id: status,
+    });
+
     return (
-        <div className="column">
+        <div
+            ref={setNodeRef}
+            className={`column ${isOver ? 'column-drag-over' : ''}`}
+        >
             <div className="column-header">
                 <h2>{title}</h2>
                 <span className="column-count">{tasks.length}</span>
