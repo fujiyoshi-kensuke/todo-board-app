@@ -124,7 +124,7 @@ npm run dev
 CRUD 操作が分かる動作確認動画は以下です。
 
 <!-- markdownlint-disable MD033 -->
-<video width="900" controls src="ここにGitHub上で取得した動画URL"></video>
+<video width="900" controls src="https://github.com/user-attachments/assets/d2b786f9-9392-4d90-a50a-ff58953d6dee"></video>
 <!-- markdownlint-enable MD033 -->
 GitHub 上でプレビューできない場合は、軽量版またはリンク先で `View raw` を押してご確認ください。
 
