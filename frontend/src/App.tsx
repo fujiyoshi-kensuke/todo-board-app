@@ -59,14 +59,6 @@ const DELETE_TODO = graphql(`
   }
 `);
 
-type Todo = {
-  id: number;
-  title: string;
-  description: string | null;
-  status: string;
-  dueDate: string | null;
-};
-
 function App() {
   const { loading, error, data } = useQuery(GET_TODOS);
 

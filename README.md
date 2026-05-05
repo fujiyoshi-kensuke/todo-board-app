@@ -33,6 +33,7 @@ Todo Board App は、タスクをボード形式で管理できる Web アプリ
 - Vite
 - React Router
 - Apollo Client
+- GraphQL Code Generator
 - CSS
 - `@dnd-kit/core`
 - `@dnd-kit/utilities`
@@ -93,14 +94,21 @@ cd backend
 npx prisma migrate dev
 ```
 
-### 4. バックエンドを起動
+### 4. GraphQL Code Generator を実行
+
+```bash
+cd frontend
+npm run codegen
+```
+
+### 5. バックエンドを起動
 
 ```bash
 cd backend
 npm run start:dev
 ```
 
-### 5. フロントエンドを起動
+### 6. フロントエンドを起動
 
 別ターミナルで以下を実行します。
 
@@ -143,11 +151,13 @@ GitHub 上でプレビューできない場合は、軽量版またはリンク�
 - 新規作成、詳細、編集ページの上部デザインをそろえ、画面遷移後も統一感のある UI になるようにしました。
 - ドラッグ＆ドロップ時には、ボタン操作と競合しにくいように調整しました。
 - タイトルだけでなく説明文も検索対象に含め、実用性を高めました。
-- タスクに集中できるように、白を基調とし、カラフルなデザインは避けました。
+- `graphql-codegen` を導入し、frontend 側で GraphQL の query / mutation に対する型安全性を高めました。
+- backend 側は NestJS の code-first 構成により、resolver・input・schema を TypeScript ベースで管理できるため、`graphql-codegen` は frontend 側での利用に絞りました。
+- `DateTime` scalar を `string` として扱う設定を追加し、締切日時の表示や編集を型安全に扱えるようにしました。
 
 ---
 
 ## 補足
 
 本アプリは、タスク管理の基本操作に加え、見た目の分かりやすさと操作性を意識して実装しました。  
-特に、一覧画面での視認性、ページ間のデザイン統一、ドラッグ＆ドロップによる直感的な操作を重視しています。
+特に、一覧画面での視認性、ページ間のデザイン統一、ドラッグ＆ドロップによる直感的な操作に加え、`graphql-codegen` を利用した型安全なデータ取得・更新を重視しています。
