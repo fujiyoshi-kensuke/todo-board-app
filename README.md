@@ -113,9 +113,11 @@ npm run dev
 
 ## 動作確認動画
 
-CRUD 操作が分かる動作確認動画は以下です。
+CRUD 操作が分かる動作確認動画は以下です。  
+GitHub 上でプレビューできない場合は、軽量版またはリンク先で `View raw` を押してご確認ください。
 
-[動作確認動画はこちら](./task_board_app_demo.mp4)
+- [動作確認動画（通常版）](./task_board_app_demo.mp4)
+- [動作確認動画（軽量版）](./task_board_app_demo_small.mp4)
 
 ---
 
