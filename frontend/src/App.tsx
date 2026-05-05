@@ -1,4 +1,3 @@
-import { gql } from '@apollo/client';
 import { useQuery, useMutation } from '@apollo/client/react';
 import { useState } from 'react';
 import { TaskColumn } from './components/TaskColumn';
@@ -9,9 +8,10 @@ import { TaskDetailPage } from './pages/TaskDetailPage';
 import { TaskEditPage } from './pages/TaskEditPage';
 import { DndContext, DragOverlay } from '@dnd-kit/core';
 import type { DragEndEvent, DragStartEvent } from '@dnd-kit/core';
+import { graphql } from './gql';
 import './App.css';
 
-const GET_TODOS = gql`
+const GET_TODOS = graphql(`
   query GetTodos {
     todos {
       id
@@ -20,9 +20,10 @@ const GET_TODOS = gql`
       status
       dueDate
     }
-  }`;
+  }
+`);
 
-const CREATE_TODO = gql`
+const CREATE_TODO = graphql(`
   mutation CreateTodo($input: CreateTodoInput!) {
     createTodo(input: $input) {
       id
@@ -32,9 +33,9 @@ const CREATE_TODO = gql`
       dueDate
     }
   }
-`;
+`);
 
-const UPDATE_TODO = gql`
+const UPDATE_TODO = graphql(`
   mutation UpdateTodo($input: UpdateTodoInput!) {
     updateTodo(input: $input) {
       id
@@ -44,11 +45,11 @@ const UPDATE_TODO = gql`
       dueDate
     }
   }
-`;
+`);
 
-const DELETE_TODO = gql`
+const DELETE_TODO = graphql(`
   mutation DeleteTodo($id: Int!) {
-    deleteTodo(id: $id){
+    deleteTodo(id: $id) {
       id
       title
       description
@@ -56,7 +57,7 @@ const DELETE_TODO = gql`
       dueDate
     }
   }
-`;
+`);
 
 type Todo = {
   id: number;
@@ -66,61 +67,25 @@ type Todo = {
   dueDate: string | null;
 };
 
-type GetTodosData = {
-  todos: Todo[];
-};
-
-type CreateTodoData = {
-  createTodo: Todo;
-};
-
-type CreateTodoVariables = {
-  input: {
-    title: string;
-    description: string;
-    dueDate?: string;
-    status?: string;
-  };
-};
-
-type UpdateTodoData = {
-  updateTodo: Todo;
-};
-
-type UpdateTodoVariables = {
-  input: {
-    id: number;
-    title?: string;
-    dueDate?: string;
-    status?: string;
-  }
-}
-
-type DeleteTodoData = {
-  deleteTodo: Todo;
-}
-
-type DeleteTodoVariables = {
-  id: number;
-}
-
 function App() {
-  const { loading, error, data } = useQuery<GetTodosData>(GET_TODOS);
+  const { loading, error, data } = useQuery(GET_TODOS);
 
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [dueDate, setDueDate] = useState('');
-
-  const [createTodo] = useMutation<CreateTodoData, CreateTodoVariables>(CREATE_TODO, {
-    refetchQueries: [{ query: GET_TODOS }],
-  });
-  const [updateTodo] = useMutation<UpdateTodoData, UpdateTodoVariables>(UPDATE_TODO, {
-    refetchQueries: [{ query: GET_TODOS }],
-  });
-  const [deleteTodo] = useMutation<DeleteTodoData, DeleteTodoVariables>(DELETE_TODO, {
-    refetchQueries: [{ query: GET_TODOS }],
-  });
   const [status, setStatus] = useState('TODO');
+
+  const [createTodo] = useMutation(CREATE_TODO, {
+    refetchQueries: [{ query: GET_TODOS }],
+  });
+
+  const [updateTodo] = useMutation(UPDATE_TODO, {
+    refetchQueries: [{ query: GET_TODOS }],
+  });
+
+  const [deleteTodo] = useMutation(DELETE_TODO, {
+    refetchQueries: [{ query: GET_TODOS }],
+  });
 
   const [searchText, setSearchText] = useState('');
   const [sortBy, setSortBy] = useState<'dueDate' | 'title'>('dueDate');
@@ -142,17 +107,24 @@ function App() {
         },
       },
     });
+
     setTitle('');
     setDescription('');
     setDueDate('');
     setStatus('TODO');
   };
 
-  const handleUpdateTodo = async (input: UpdateTodoVariables['input']) => {
+  const handleUpdateTodo = async (input: {
+    id: number;
+    title?: string;
+    description?: string;
+    dueDate?: string;
+    status?: string;
+  }) => {
     await updateTodo({
       variables: {
         input,
-      }
+      },
     });
   };
 
@@ -160,7 +132,7 @@ function App() {
     await deleteTodo({
       variables: { id },
     });
-  }
+  };
 
   const handleDragEnd = async (event: DragEndEvent) => {
     const { active, over } = event;
@@ -205,10 +177,11 @@ function App() {
   if (error) return <p>Error: {error.message}</p>;
 
   const filteredTodos =
-  data?.todos.filter((todo) =>
-    todo.title.toLowerCase().includes(searchText.toLowerCase()) ||
-    (todo.description ?? '').toLowerCase().includes(searchText.toLowerCase())
-  ) ?? [];
+    data?.todos.filter((todo) =>
+      todo.title.toLowerCase().includes(searchText.toLowerCase()) ||
+      (todo.description ?? '').toLowerCase().includes(searchText.toLowerCase())
+    ) ?? [];
+
   const sortedTodos = [...filteredTodos].sort((a, b) => {
     if (sortBy === 'dueDate') {
       const aTime = a.dueDate ? new Date(a.dueDate).getTime() : Number.MAX_SAFE_INTEGER;
@@ -217,15 +190,17 @@ function App() {
     }
     return a.title.localeCompare(b.title);
   });
+
   const activeTodo =
     activeTodoId === null
       ? null
       : data?.todos.find((todo) => todo.id === activeTodoId) ?? null;
+
   const todoItems = sortedTodos.filter((todo) => todo.status === 'TODO');
   const doingItems = sortedTodos.filter((todo) => todo.status === 'DOING');
   const doneItems = sortedTodos.filter((todo) => todo.status === 'DONE');
 
-  return(
+  return (
     <Routes>
       <Route
         path="/"
