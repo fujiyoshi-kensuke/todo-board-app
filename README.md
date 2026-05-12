@@ -47,13 +47,28 @@ Todo Board App は、タスクをボード形式で管理できる Web アプリ
 
 ### データベース
 
-- PostgreSQL
+- PostgreSQL (Neon)
+
+### デプロイ
+
+- Frontend: Vercel
+- Backend: Render
+- Database: Neon
 
 ---
 
 ## リポジトリ
 
-[GitHub リポジトリ](https://github.com/AKARI-intern/intern-hw-saas-sw-dib-fujiyoshi-kensuke)
+[GitHub リポジトリ](https://github.com/fujiyoshi-kensuke/todo-board-app)
+
+---
+
+## 公開URL
+
+- Frontend: `https://todo-board-app-frontend.vercel.app`
+- Backend (GraphQL): `https://task-board-app-backend-bucj.onrender.com/graphql`
+
+公開環境では Frontend を Vercel、Backend を Render、Database を Neon で運用しています。
 
 ---
 
@@ -62,8 +77,8 @@ Todo Board App は、タスクをボード形式で管理できる Web アプリ
 ### 1. リポジトリをクローン
 
 ```bash
-git clone https://github.com/AKARI-intern/intern-hw-saas-sw-dib-fujiyoshi-kensuke.git
-cd intern-hw-saas-sw-dib-fujiyoshi-kensuke
+git clone https://github.com/fujiyoshi-kensuke/todo-board-app.git
+cd todo-board-app
 ```
 
 ### 2. 依存関係をインストール
@@ -86,7 +101,7 @@ npm install
 
 ### 3. データベースを準備
 
-PostgreSQL を起動し、環境変数 `DATABASE_URL` を設定してください。  
+環境変数 `DATABASE_URL` を設定してください。  
 その後、`backend` ディレクトリでマイグレーションを適用します。
 
 ```bash
@@ -95,6 +110,8 @@ npx prisma migrate dev
 ```
 
 ### 4. GraphQL Code Generator を実行
+
+frontend 側で GraphQL の型定義を生成します。
 
 ```bash
 cd frontend
