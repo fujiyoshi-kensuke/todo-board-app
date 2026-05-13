@@ -55,6 +55,10 @@ Todo Board App は、タスクをボード形式で管理できる Web アプリ
 - Backend: Render
 - Database: Neon
 
+### UI設計・デザイン
+
+- Figma
+
 ---
 
 ## リポジトリ
@@ -171,6 +175,7 @@ GitHub 上でプレビューできない場合は、軽量版またはリンク�
 - `graphql-codegen` を導入し、frontend 側で GraphQL の query / mutation に対する型安全性を高めました。
 - backend 側は NestJS の code-first 構成により、resolver・input・schema を TypeScript ベースで管理できるため、`graphql-codegen` は frontend 側での利用に絞りました。
 - `DateTime` scalar を `string` として扱う設定を追加し、締切日時の表示や編集を型安全に扱えるようにしました。
+- Figma を用いて画面構成を整理し、ボード画面・詳細画面・編集画面のUIに統一感を持たせました。
 
 ---
 
